@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>Scrollverhaal</title>
+  </head>
+  <body>
+    <h1 class="hero">Scrollverhaal met voorbeelden van GMD skillzz (opgedaan tijdens webcartografie lessen)</h1>
+    <!--<img class="thumbnail img-thumbnail d-block mx-auto" src="images/red-forest.jpg" alt="watch thumbnail"> -->
+    <div>
+      <h1 class="nummer1">Nummer 1 <br><br> Dit is een mislukte kaart die gemaakt is met kepler. Wat hier mis ging was dat de coordinaten in de geimporteerde excel sheet niet klopte. Vermoedelijk door een punt te gebruiken ipv een komma.</h1>
+      <img class="nummer1_img" src="images/1.png" />
+    </div>
+
+    <div>
+      <h1 class="nummer1">Nummer 2 <br><br>De geweldige skyline van Manhatten gevisualiseerd met mapbox. </h1>
+      <img class="nummer1_img" src="images/2.png" />
+    </div>
+
+    <div>
+      <h1 class="nummer1">Nummer 3 <br><br> Nog een kaart gemaakt met kepler. In deze kaart zijn lijnen te zien die vanuit amersfoort naar elk land ter wereld gaan.</h1>
+      <img class="nummer1_img" src="images/3.png" />
+    </div>
+
+    <div>
+      <h1 class="nummer1">Nummer 4 <br><br> Dit is een kaart van Griekenland met een heatmap van aardbevingen. </h1>
+      <img class="nummer1_img" src="images/4.png" />
+    </div>
+
+    <div>
+      <h1 class="nummer1">Nummer 5 <br><br> Een kaart gemaakt in Qgis. Vervolgens met een plugin is er een cartogram van gemaakt. Hierdoor zie je beter de verschillen tussen waarden. </h1>
+      <img class="nummer1_img" src="images/5.jpg" />
+    </div>
+
+    <div>
+      <h1 class="nummer1">Nummer 6 <br><br> Nederland heeft wel bergen.</h1>
+      <img class="nummer1_img" src="images/6.png" />
+    </div>
+
+    <div>
+      <h1 class="nummer1">Nummer 7 <br><br> Alweer een kepler kaart..? Ja deze is van studenten die aan de Aeres Hogeschool studeren. Je kunt hierop zien waar ze wonen.</h1>
+      <img class="nummer1_img" src="images/7.png" />
+    </div>
+
+
+
+
+
+
+
+<!-- KAART SCRIPT BEGIN -->
+    <script>
+      //initialize the map
+     var map = L.map('map').setView([44.675469, 8.417773], 5);
+
+      //Create baselayer - tiles
+     var backgroundMap = L.tileLayer('http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg',{
+        attribution: '<a href="http://openstreetmap.org">OpenStreetMap</a>contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+        maxZoom: 19
+        }
+
+      );
+         backgroundMap.addTo(map);
+
+      //Add markers
+      var estuarium = L.marker([38.78941578, -9.01771545]).addTo(map);
+
+      var lagune = L.marker([45.38591286, 12.28340149]).addTo(map);
+
+      var lissabon = L.marker([38.721907, -9.139086]).addTo(map);
+
+      var venetie = L.marker([45.438117, 12.325850]).addTo(map);
+
+
+      //Add popups
+    var popup = "Estuarium van Taag";
+    estuarium.bindPopup(popup);
+
+    var popup = "Lagune van Venetie";
+    lagune.bindPopup(popup);
+
+    var popup = "Lissabon";
+    lissabon.bindPopup(popup);
+
+    var popup = "Venetie";
+    venetie.bindPopup(popup);
+
+
+
+     //Add polygon--
+         //var polygon = L.polygon([
+      //[38.78941578, -9.01771545],
+      //[45.38591286, 12.28340149],
+      //[52.18655622, 5.38577646]
+    //]).addTo(map);
+
+
+
+      // Create a marker first
+    var geojsonMarkerOptions = {
+      radius: 8,
+      fillColor: "#ff7800",
+      color: "#000",
+      weight: 1,
+      opacity: 1,
+      fillOpacity: 0.8
+    };
+
+    //create a empty geojson layer
+    var geojson = L.geoJson(null,{
+      pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, geojsonMarkerOptions);
+      }
+    }).addTo(map);
+
+    var geojsonMarkerOptions = {
+      radius: 8,
+      fillColor: "#ff7800",
+      color: "#000",
+      weight: 1,
+      opacity: 1,
+      fillOpacity: 0.8
+    };
+
+      //create a empty geojson layer
+    var geojson = L.geoJson(null,{
+      pointToLayer: function (geoJsonPoint, latlng) {
+        return L.circleMarker(latlng, geojsonMarkerOptions);
+      }
+    }).addTo(map);
+
+      // new Http Request
+    var xhttp = new XMLHttpRequest();
+
+    // set the request method and data file
+    xhttp.open('GET', encodeURI("All_BFRO_Reports_points.js"));
+
+    //specify what must be done with the geojson data to the layer when request is succesfull
+    xhttp.onload = function() {
+      if (xhttp.readyState === 4) {
+          // add the json data to the geojson layer we created before!
+          geojson.addData(JSON.parse(xhttp.responseText));
+        } else {
+          alert('Request failed.  Returned status of ' + xhttp.status);
+        }
+    };
+
+    // send the request
+    xhttp.send();
+
+    </script>
+
+    <!-- KAART SCRIPT EINDE -->
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
